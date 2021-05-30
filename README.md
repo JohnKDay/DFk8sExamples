@@ -90,16 +90,25 @@ persistentvolumeclaim/statefulset-counter-statefulset-counter-1   Bound    pvc-e
 ```
 <br>
 All of the DeepFactor alerts in the portal should be the same:
-<br>
+
 ![Main Dashboard](images/DeepFactorK8sYAMLs.png "Main Dashboard")
+
 <br><br>
+
 ![Pod](images/DeepFactorK8sYAMLs-Pod.png "Pod")
+
 <br><br>
+
 ![Deployment](images/DeepFactorK8sYAMLs-Deployment.png "Deployment")
+
 <br><br>
+
 ![StatefulSet](images/DeepFactorK8sYAMLs-StatefulSet.png "StatefulSet")
+
 <br><br>
-![DaemonSet](images/DeepFactorK8sYAMLs-DaemonSet.png "DaemonSet")
+
+![DaemonSet](images/DeepFactorK8sYAMLs-DaemonSet.png)
+
 <br><br>
 
 ### CleanUp
