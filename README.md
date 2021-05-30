@@ -90,6 +90,7 @@ persistentvolumeclaim/statefulset-counter-statefulset-counter-1   Bound    pvc-e
 ```
 <br>
 All of the DeepFactor alerts in the portal should be the same:
+<br>
 ![Main Dashboard](images/DeepFactorK8sYAMLs.png "Main Dashboard")
 <br><br>
 ![Pod](images/DeepFactorK8sYAMLs-Pod.png "Pod")
@@ -102,7 +103,7 @@ All of the DeepFactor alerts in the portal should be the same:
 <br><br>
 
 ### CleanUp
-
+<br>
 1. Delete the setup using the command:  
 `kubectl delete -f .`
 2. StatefulSet volumes will not delete when they become unbound and therefore
