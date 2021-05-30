@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-counter
+  labels:
+    app: deployment-counter
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: deployment-counter
+  template:
+    metadata:
+      labels:
+        app: deployment-counter
+      annotations:
+        df.k8-app.name: "Deployment-counter"
+        df.k8-app.registration/inject: "enabled"
+        df-k8-app.alerts/policy: "Default Policy: Max Alert"
+        app-image/repo-details: "kahootali/counter:1.0"
+        #df.k8-app.lsa: "java"
+        df.k8-app.run.token/runtoken: "<Your Token Here>"
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - deployment-counter
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: deployment-counter
+          image: "kahootali/counter:1.0"
+          imagePullPolicy: Always
+          env:
+            - name: LD_PRELOAD
+              value: /opt/deepfactor/lib/libdf.so
+            - name: DF_MANIFEST
+              value: /opt/deepfactor/manifest/df-manifest.json
+          volumeMounts:
+            - name: deployment-counter
+              mountPath: /app/
+      volumes:
+        - name: deployment-counter
+          persistentVolumeClaim:
+            claimName: deployment-counter
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: deployment-counter
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Mi

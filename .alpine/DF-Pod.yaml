@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-counter
+  labels:
+    app: pod-counter
+  annotations:
+    df.k8-app.name: "Pod-counter"
+    df.k8-app.registration/inject: "enabled"
+    df-k8-app.alerts/policy: "Default Policy: Max Alert"
+    app-image/repo-details: "kahootali/counter:1.0"
+    #df.k8-app.lsa: "java"
+    df.k8-app.run.token/runtoken: "<Your Token Here>"
+spec:
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - pod-counter
+          topologyKey: "kubernetes.io/hostname"
+  containers:
+    - name: pod-counter
+      image: "kahootali/counter:1.0"
+      imagePullPolicy: Always
+      env:
+        - name: LD_PRELOAD
+          value: /opt/deepfactor/lib/libdf.so
+        - name: DF_MANIFEST
+          value: /opt/deepfactor/manifest/df-manifest.json
+      volumeMounts:
+        - name: pod-counter
+          mountPath: /app/
+  volumes:
+    - name: pod-counter
+      persistentVolumeClaim:
+        claimName: pod-counter
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pod-counter
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Mi

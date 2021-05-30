@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: statefulset-counter
+spec:
+  serviceName: statefulset-counter
+  selector:
+    matchLabels:
+      app: statefulset-counter
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: statefulset-counter
+      annotations:
+        df.k8-app.name: "StatefulSet-counter"
+        df.k8-app.registration/inject: "enabled"
+        df-k8-app.alerts/policy: "Default Policy: Max Alert"
+        app-image/repo-details: "johnkday/counter:1.0"
+        #df.k8-app.lsa: "java"
+        df.k8-app.run.token/runtoken: "<Your Token Here>"
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - statefulset-counter
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: statefulset-counter
+          image: "johnkday/counter:1.0"
+          imagePullPolicy: Always
+          env:
+            - name: LD_PRELOAD
+              value: /opt/deepfactor/lib/libdf.so
+            - name: DF_MANIFEST
+              value: /opt/deepfactor/manifest/df-manifest.json
+          volumeMounts:
+            - name: statefulset-counter
+              mountPath: /app/
+  volumeClaimTemplates:
+    - metadata:
+        name: statefulset-counter
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 50Mi

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemon-counter
+spec:
+  selector:
+    matchLabels:
+      app: daemon-counter
+  template:
+    metadata:
+      name: counter-app
+      labels:
+        app: daemon-counter
+      annotations:
+        df.k8-app.name: "DaemonSet-counter"
+        df.k8-app.registration/inject: "enabled"
+        df-k8-app.alerts/policy: "Default Policy: Max Alert"
+        app-image/repo-details: "kahootali/counter:1.0"
+        #df.k8-app.lsa: "java"
+        df.k8-app.run.token/runtoken: "<Your Token Here>"
+    spec:
+      tolerations:
+        - effect: NoSchedule
+          operator: Exists
+      containers:
+        - name: daemon-counter
+          image: "kahootali/counter:1.0"
+          imagePullPolicy: Always
+          env:
+            - name: LD_PRELOAD
+              value: /opt/deepfactor/lib/libdf.so
+            - name: DF_MANIFEST
+              value: /opt/deepfactor/manifest/df-manifest.json
+          volumeMounts:
+            - name: daemon-counter
+              mountPath: /app/
+      volumes:
+        - name: daemon-counter
+          persistentVolumeClaim:
+            claimName: daemon-counter
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: daemon-counter
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Mi
