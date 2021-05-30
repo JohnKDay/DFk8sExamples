@@ -44,17 +44,13 @@ mode
 
 1. Clone repository from github.  
 `git clone https://github.com/johnkday/DF-instrument-examples`
-<br>
-2. Change directory into **glibc** directory.  
+2. Change directory into **glibc** directory.   
 `cd glibc`
-<br>
 3. Replace the **`<Your Token Here>`** in each of the `.yaml` files with
 your own DeepFactor Run Token.  
 `kubectl apply -f .`
-<br>
 4. Apply all of the workloads to the cluster.  
 `kubectl apply -f .`
-<br>
 5. Watch the cluster deploy.  
 `watch kubectl get all,pvc`
 <br><br>
@@ -92,8 +88,8 @@ persistentvolumeclaim/pod-counter                                 Bound    pvc-c
 persistentvolumeclaim/statefulset-counter-statefulset-counter-0   Bound    pvc-7bd089ba-73af-4e85-8e62-9cbab660a228   50Mi       RWO            longhorn       5m51s
 persistentvolumeclaim/statefulset-counter-statefulset-counter-1   Bound    pvc-ed286011-8190-41cb-8674-aa9ac6b13737   50Mi       RWO            longhorn       4m37s
 ```
+<br>
 All of the DeepFactor alerts in the portal should be the same:
-
 ![Main Dashboard](images/DeepFactorK8sYAMLs.png "Main Dashboard")
 <br><br>
 ![Pod](images/DeepFactorK8sYAMLs-Pod.png "Pod")
@@ -109,7 +105,6 @@ All of the DeepFactor alerts in the portal should be the same:
 
 1. Delete the setup using the command:  
 `kubectl delete -f .`
-<br>
 2. StatefulSet volumes will not delete when they become unbound and therefore
 must have an explict call to delete them
 `kubectl get pvc -o name | xargs kubectl delete`
