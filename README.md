@@ -10,25 +10,35 @@
 <br><br>
 
 ### Construct
-Kubernetes (K8s) yaml files are declared for 4 different constructs (workloads):
+
+Workloads on Kubernetes are deployed using Pods. According to the Kubernetes
+documentation, "Pods are the smallest deployable units of computing that you can
+create and manage in Kubernetes".
+ 
+Applications/workloads can be deployed via 4 different constructs by using their
+respective YAML decalarations :
 * [Pod](https://kubernetes.io/docs/concepts/workloads/pods/)
-* [DeploymentSet](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+* [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 * [StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
-* [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)  
+* [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) 
+ 
+ 
+Aside from Pod YAML declaration, all other constructs can deploy multiple
+replicas(by launching multiple pods) and manage them. For example, in the case of
+'Statefulsets' and 'Deployments', one can set the **`replicas`**  key in the YAML
+to have multiple pods. In the case of 'DaemonSet', a Pod will be deployed on each worker
+node in the cluster.
+ 
+Pod anti-affinity is one of the policies that can also be used to ensure that the
+Pods are deployed on different nodes in the k8s cluster.
+ 
+Each of the declarations can also include the use of a [PVC](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims) (Persistent Volume Claim) using a
+storage class or a default storage class available for the cluster.
+In this demo case, the Longhorn [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) is used as the default storageclass.
+This allows for the creation of `ReadWriteOnce` as well as `ReadWriteMany`, which is
+required for multiple pods to read/write to the volumes as needed by both the
+DaemonSet and DeploymentSet. 
 
-Aside from Pod yaml declaration, all of the other constructs deploy multiple
-containers using the **`replicas`** value set at **`2`** or in the case of a DaemonSet 
-a Pod will deploy on each worker node in the cluster.
-
-Pod anti-affinity is also used to ensure that Pods are deployed on different
-in the cluster.
-
-Each of the declarations also include the use of a [PVC](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims) (Persistent Volume Claim) using the
-default class provided by the cluster. In this demo case the Longhorn [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) is used as the default
-class. This allows for creation of `ReadWriteOnce` as well as `ReadWriteMany`,
-that is required for multiple pods to read/write to the volumes as needed by both
-the DaemonSet and DeploymentSet.  
-  
 <br><br>  
 
 ### Requirements
@@ -36,7 +46,7 @@ To run a full test the following is required of the Kubernetes cluster:
 * Running K8s version 1.18 (tested)
 * DeepFactor webhook deployed to cluster
 * Multiple worker nodes
-* A default StorageClass can can create volumes with **`ReadWriteMany`** access
+* A default StorageClass that can create volumes with **`ReadWriteMany`** access
 mode  
 <br><br>
 
