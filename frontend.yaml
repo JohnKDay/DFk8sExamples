@@ -1,0 +1,57 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 9090
+    name: client
+  selector:
+    app: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+      annotations:
+        df.k8-app.name: "Eureka2"
+        df.k8-app.registration/inject: "enabled"
+        df-k8-app.alert/policy: "Default Policy: Max Alert"
+        app-image/repo-details: "johnkday/frontend:eureka"
+        df.k8-app.run.token/runtoken: "<your token here>"
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - frontend
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: frontend
+          image: "johnkday/frontend:eureka"
+          imagePullPolicy: Always
+          env:
+            - name: LD_PRELOAD
+              value: /opt/deepfactor/lib/libdf.so
+            - name: DF_MANIFEST
+              value: /opt/deepfactor/manifest/df-manifest.json
