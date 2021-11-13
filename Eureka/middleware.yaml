@@ -32,7 +32,7 @@ spec:
       annotations:
         df.k8-app.name: "Eureka"
         df.k8-app.registration/inject: "enabled"
-        df-k8-app.alert/policy: "Default Policy: Max Alert"
+        df.k8-app.alert/policy: "Default Policy: Max Alert"
         app-image/repo-details: "johnkday/fioapp:latest"
         df.k8-app.run.token/runtoken: "<your token here>"
     spec:
