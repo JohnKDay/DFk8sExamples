@@ -102,7 +102,7 @@ spec:
       annotations:
         df.k8-app.name: "Eureka"
         df.k8-app.registration/inject: "enabled"
-        df-k8-app.alert/policy: "Default Policy: Max Alert"
+        df.k8-app.alert/policy: "Default Policy: Max Alert"
         app-image/repo-details: "docker.io/bitnami/zookeeper:3.7.0-debian-10-r106"
         df.k8-app.lsa: "java"
         df.k8-app.run.token/runtoken: "<your token here>"
